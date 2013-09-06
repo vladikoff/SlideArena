@@ -24,19 +24,13 @@ function Slides(game, options) {
 }
 
 Slides.prototype.load = function (data) {
-  data = [
-    { src: '/slides/voxeljs-jquery.001.png' },
-    { src: '/slides/voxeljs-jquery.002.png' },
-    { src: '/slides/voxeljs-jquery.003.png' },
-    { src: '/slides/voxeljs-jquery.004.png' },
-    { src: '/slides/voxeljs-jquery.005.png' },
-    { src: '/slides/voxeljs-jquery.006.png' },
-    { src: '/slides/voxeljs-jquery.007.png' },
-    { src: '/slides/voxeljs-jquery.008.png' },
-    { src: '/slides/voxeljs-jquery.009.png' },
-    { src: '/slides/voxeljs-jquery.010.png' }
+  data = [];
 
-  ];
+  for (var n = 1; n <= 27; n++) {
+    if (n < 10) n = "0" + n;
+
+    data.push( { src: '/slides/voxeljs-jquery.0' + n + '.png' } );
+  }
 
   this.slideData = data;
 };
@@ -60,7 +54,7 @@ Slides.prototype.render = function () {
       mesh.position.x = self.OFFSET.x;
       mesh.position.y = self.OFFSET.y;
 
-      self.slides.push(mesh);
+      self.slides[i] = mesh;
       self.group.add(mesh);
 
       if (i === 0) {
@@ -72,10 +66,18 @@ Slides.prototype.render = function () {
   });
 };
 
-Slides.prototype.setCurrent = function (idx) {
+Slides.prototype.setCurrent = function (idx, opts) {
   var self = this;
   var c = this.CENTER;
   var o = this.OFFSET;
+
+  var transIn = 800;
+  var transOut = 500;
+
+  if (opts) {
+    transIn = 0;
+    transOut = 0;
+  }
 
   if (idx >= 0 && idx < this.slides.length && !this.SWITCHING) {
     var oldSlide = this.slides[this.current];
@@ -86,12 +88,12 @@ Slides.prototype.setCurrent = function (idx) {
     var newSlide = this.slides[idx];
 
     var exit = new TWEEN.Tween(oldSlide.position)
-      .to(this.OFFSET, 800)
+      .to(this.OFFSET, transIn)
       .easing(TWEEN.Easing.Back.Out)
       .start();
 
     var enter = new TWEEN.Tween(newSlide.position)
-      .to(this.CENTER, 500)
+      .to(this.CENTER, transOut)
       .easing(TWEEN.Easing.Quadratic.Out);
 
     exit.onComplete(function () {
@@ -108,12 +110,12 @@ Slides.prototype.setCurrent = function (idx) {
   }
 };
 
-Slides.prototype.next = function () {
-  this.setCurrent(this.current + 1);
+Slides.prototype.next = function (opts) {
+  this.setCurrent(this.current + 1, opts);
 };
 
-Slides.prototype.prev = function () {
-  this.setCurrent(this.current - 1);
+Slides.prototype.prev = function (opts) {
+  this.setCurrent(this.current - 1, opts);
 };
 
 Slides.prototype.createSliderExtras = function () {
