@@ -31,7 +31,7 @@ function Slides(game, client, options) {
 Slides.prototype.load = function (data) {
   data = [];
 
-  for (var n = 1; n <= 27; n++) {
+  for (var n = 1; n <= 30; n++) {
     if (n < 10) n = "0" + n;
 
     data.push( { src: '/slides/voxeljs-jquery.0' + n + '.png' } );
