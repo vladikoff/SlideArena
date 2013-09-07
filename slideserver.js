@@ -27,7 +27,7 @@ module.exports = function() {
         return y <= (x * x + z * z) * 31 / (32 * 32 * 2) + 1 ? 1 : 0;
       }
     },
-    chunkDistance: 2,
+    chunkDistance: 3,
     materials: [
       ['floor', 'around', 'around'],
       'crate'

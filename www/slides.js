@@ -62,8 +62,8 @@ Slides.prototype.render = function () {
       self.slides[i] = mesh;
       self.group.add(mesh);
 
-      if (i === 0) {
-        self.setCurrent(self.current);
+      if (self.game.settings.currentSlide === i) {
+        self.setCurrent(self.game.settings.currentSlide)
       }
     });
 
@@ -87,35 +87,37 @@ Slides.prototype.setCurrent = function (idx, opts) {
   if (idx >= 0 && idx < this.slides.length && !this.SWITCHING) {
     var oldSlide = this.slides[this.current];
 
-    this.SWITCHING = true;
-    this.current = idx;
+    if (oldSlide) {
+      this.SWITCHING = true;
+      this.current = idx;
 
-    var newSlide = this.slides[idx];
-    if (window.connectedClient.emitter && window.takeControl) {
-      console.log('Sending Slide')
-      window.connectedClient.emitter.emit('slide', idx)
+      var newSlide = this.slides[idx];
+      if (window.connectedClient.emitter && window.takeControl) {
+        console.log('Sending Slide')
+        window.connectedClient.emitter.emit('slide', idx)
+      }
+
+      var exit = new TWEEN.Tween(oldSlide.position)
+        .to(this.OFFSET, transIn)
+        .easing(TWEEN.Easing.Back.Out)
+        .start();
+
+      var enter = new TWEEN.Tween(newSlide.position)
+        .to(this.CENTER, transOut)
+        .easing(TWEEN.Easing.Quadratic.Out);
+
+      exit.onComplete(function () {
+        enter.start();
+      });
+
+      enter.onComplete(function () {
+        self.SWITCHING = false;
+      });
+
+      window.currentSlide = idx
+      window.slide = newSlide;
+      //slide.position.set(c.x, c.y, c.z);
     }
-
-    var exit = new TWEEN.Tween(oldSlide.position)
-      .to(this.OFFSET, transIn)
-      .easing(TWEEN.Easing.Back.Out)
-      .start();
-
-    var enter = new TWEEN.Tween(newSlide.position)
-      .to(this.CENTER, transOut)
-      .easing(TWEEN.Easing.Quadratic.Out);
-
-    exit.onComplete(function () {
-      enter.start();
-    });
-
-    enter.onComplete(function () {
-      self.SWITCHING = false;
-    });
-
-    window.currentSlide = idx
-    window.slide = newSlide;
-    //slide.position.set(c.x, c.y, c.z);
   }
 };
 

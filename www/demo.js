@@ -1,1 +1,1 @@
-require('./hello-world.js')({server: "ws://localhost:8080/"})
+require('./hello-world.js')({server: "ws://localhost:8095/"})

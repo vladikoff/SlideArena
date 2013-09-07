@@ -34,9 +34,7 @@ module.exports = function(opts, setup) {
 
     slides = require('./slides')(game, client);
     window.slides = slides
-    if (game.settings.currentSlide) {
-      slides.setCurrent(game.settings.currentSlide)
-    }
+
   })
 
   return game
