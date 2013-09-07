@@ -1,9 +1,10 @@
 var TWEEN = require('./tween');
 window.TWEEN = TWEEN;
+window.takeControl = false;
 
 module.exports = Slides;
 
-function Slides(game, options) {
+function Slides(game, client, options) {
   if (!options) options = {};
   if (!(this instanceof Slides)) return new Slides(game, options);
 
@@ -11,6 +12,10 @@ function Slides(game, options) {
   this.OFFSET = { x: 0.5, y: -5, z: 0 };
   this.SWITCHING = false;
   this.current = 0;
+
+  if (client) {
+    this.client = client;
+  }
 
   this.game = game;
   this.group = new game.THREE.Object3D();
@@ -20,7 +25,6 @@ function Slides(game, options) {
   this.createSliderExtras();
   this.load();
   this.render();
-
 }
 
 Slides.prototype.load = function (data) {
@@ -86,6 +90,10 @@ Slides.prototype.setCurrent = function (idx, opts) {
     this.current = idx;
 
     var newSlide = this.slides[idx];
+    if (window.connectedClient.emitter && window.takeControl) {
+      console.log('Sending Slide')
+      window.connectedClient.emitter.emit('slide', idx)
+    }
 
     var exit = new TWEEN.Tween(oldSlide.position)
       .to(this.OFFSET, transIn)
@@ -104,7 +112,7 @@ Slides.prototype.setCurrent = function (idx, opts) {
       self.SWITCHING = false;
     });
 
-
+    window.currentSlide = idx
     window.slide = newSlide;
     //slide.position.set(c.x, c.y, c.z);
   }

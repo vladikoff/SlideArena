@@ -9,6 +9,7 @@ var crunch = require('voxel-crunch')
 var engine = require('voxel-engine')
 var texturePath = require('painterly-textures')(__dirname)
 var voxel = require('voxel')
+var currentSlide = 0;
 
 module.exports = function() {
 
@@ -19,7 +20,7 @@ module.exports = function() {
     generate: function (x, y, z) {
 
       if (y === 25) {
-        return 1;
+        return 2;
       }
 
       if ( y > -2 && y <= 26 ) {
@@ -27,11 +28,16 @@ module.exports = function() {
       }
     },
     chunkDistance: 2,
-    materials: ['#fff', '#000'],
-    materialFlatColor: true,
+    materials: [
+      ['floor', 'around', 'around'],
+      'crate'
+    ],
+    texturePath: texturePath,
     worldOrigin: [0, 0, 0],
-    controls: { discreteFire: true }
-  };
+    controls: { discreteFire: true },
+    avatarInitialPosition: [2, 20, 2],
+    currentSlide: currentSlide
+  }
 
   var game = engine(settings)
   var server = http.createServer(ecstatic(path.join(__dirname, 'www')))
@@ -51,7 +57,7 @@ module.exports = function() {
   function sendUpdate() {
     var clientKeys = Object.keys(clients)
     if (clientKeys.length === 0) return
-    var update = {positions:{}, date: +new Date()}
+    var update = {positions:{}, date: +new Date(), currentSlide: currentSlide}
     clientKeys.map(function(key) {
       var emitter = clients[key]
       update.positions[key] = {
@@ -113,7 +119,6 @@ module.exports = function() {
       position: new game.THREE.Vector3()
     }
 
-    console.log(id, 'joined')
     emitter.emit('id', id)
     broadcast(id, 'join', id)
     stream.once('end', leave)
@@ -123,6 +128,11 @@ module.exports = function() {
       console.log(id, 'left')
       broadcast(id, 'leave', id)
     }
+
+
+    emitter.on('slide', function(id) {
+      currentSlide = id
+    });
 
     emitter.on('message', function(message) {
       if (!message.text) return
