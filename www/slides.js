@@ -1,6 +1,7 @@
 var TWEEN = require('./tween');
 window.TWEEN = TWEEN;
 window.takeControl = false;
+window.currentSlide = 0
 
 module.exports = Slides;
 
@@ -11,7 +12,7 @@ function Slides(game, client, options) {
   this.CENTER = { x: 0.5, y: 8, z: 0 };
   this.OFFSET = { x: 0.5, y: -5, z: 0 };
   this.SWITCHING = false;
-  this.current = 0;
+  this.current = window.currentSlide;
 
   if (client) {
     this.client = client;

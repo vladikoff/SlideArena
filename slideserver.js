@@ -68,7 +68,11 @@ module.exports = function() {
         }
       }
     })
-    broadcast(false, 'update', update)
+    try {
+      broadcast(false, 'update', update)
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   setInterval(sendUpdate, 1000/22) // 45ms
