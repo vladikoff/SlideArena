@@ -48,11 +48,11 @@ Client.prototype.bindEvents = function(socket, game) {
     console.log('got id', id)
     self.playerID = id
     if (game != null) {
-  	  self.game = game
-  	  console.log("Sending local settings to the server.")
-  	  emitter.emit('clientSettings', self.game.settings)
+      self.game = game
+      console.log("Sending local settings to the server.")
+      emitter.emit('clientSettings', self.game.settings)
     } else {
-  	  emitter.emit('clientSettings', null)
+      emitter.emit('clientSettings', null)
     }
   })
 
@@ -60,12 +60,12 @@ Client.prototype.bindEvents = function(socket, game) {
   emitter.on('settings', function(settings) {
     settings.texturePath = texturePath
     settings.generateChunks = false
-	//deserialise the voxel.generator function.
-	if (settings.generatorToString != null) {
-		settings.generate = eval("(" + settings.generatorToString + ")")
-	}
-    self.game = self.createGame(settings, game)	
-	emitter.emit('created')
+  //deserialise the voxel.generator function.
+  if (settings.generatorToString != null) {
+    settings.generate = eval("(" + settings.generatorToString + ")")
+  }
+    self.game = self.createGame(settings, game)  
+  emitter.emit('created')
     emitter.on('chunk', function(encoded, chunk) {
       var voxels = crunch.decode(encoded, chunk.length)
       chunk.voxels = voxels
@@ -117,7 +117,7 @@ Client.prototype.createGame = function(settings, game) {
   setTimeout(function() {
     emitter.on('update', function(updates) {
       if (window.slides && updates.currentSlide !== window.currentSlide) {
-        window.slides.setCurrent(updates.currentSlide);
+        window.slides.setCurrent(updates.currentSlide, 'static');
       }
       Object.keys(updates.positions).map(function(player) {
         var update = updates.positions[player]
