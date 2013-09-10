@@ -119,6 +119,8 @@ Slides.prototype.setCurrent = function (idx, opts) {
         window.slide = newSlide;
         //slide.position.set(c.x, c.y, c.z);
       }
+    } else {
+      this.SWITCHING = false;
     }
   }
 };
