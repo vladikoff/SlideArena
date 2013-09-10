@@ -109,6 +109,7 @@ Slides.prototype.setCurrent = function (idx, opts) {
 
         exit.onComplete(function () {
           enter.start();
+          self.SWITCHING = false;
         });
 
         enter.onComplete(function () {
