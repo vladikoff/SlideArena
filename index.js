@@ -116,7 +116,7 @@ Client.prototype.createGame = function(settings, game) {
   // setTimeout is because three.js seems to throw errors if you add stuff too soon
   setTimeout(function() {
     emitter.on('update', function(updates) {
-      if (window.slides && updates.currentSlide !== window.currentSlide) {
+      if (window.slides && updates.currentSlide !== window.currentSlide && window.takeControl !== true) {
         window.slides.setCurrent(updates.currentSlide, 'static');
       }
       Object.keys(updates.positions).map(function(player) {

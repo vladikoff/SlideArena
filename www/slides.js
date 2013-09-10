@@ -62,9 +62,11 @@ Slides.prototype.render = function () {
       self.slides[i] = mesh;
       self.group.add(mesh);
 
+      /*
       if (self.game.settings.currentSlide === i) {
         self.setCurrent(self.game.settings.currentSlide)
       }
+      */
     });
 
     image.src = slide.src;
