@@ -34,7 +34,7 @@ Slides.prototype.load = function (data) {
   for (var n = 1; n <= 29; n++) {
     if (n < 10) n = "0" + n;
 
-    data.push( { src: '/slides/voxeljs-jquery.0' + n + '.png' } );
+    data.push( { src: '/slides/voxeljs-jquery.0' + n + '.jpg' } );
   }
 
   this.slideData = data;
@@ -92,31 +92,33 @@ Slides.prototype.setCurrent = function (idx, opts) {
       this.current = idx;
 
       var newSlide = this.slides[idx];
-      if (window.connectedClient.emitter && window.takeControl) {
-        console.log('Sending Slide')
-        window.connectedClient.emitter.emit('slide', idx)
+      if (newSlide) {
+        if (window.connectedClient.emitter && window.takeControl) {
+          console.log('Sending Slide')
+          window.connectedClient.emitter.emit('slide', idx)
+        }
+
+        var exit = new TWEEN.Tween(oldSlide.position)
+          .to(this.OFFSET, transIn)
+          .easing(TWEEN.Easing.Back.Out)
+          .start();
+
+        var enter = new TWEEN.Tween(newSlide.position)
+          .to(this.CENTER, transOut)
+          .easing(TWEEN.Easing.Quadratic.Out);
+
+        exit.onComplete(function () {
+          enter.start();
+        });
+
+        enter.onComplete(function () {
+          self.SWITCHING = false;
+        });
+
+        window.currentSlide = idx
+        window.slide = newSlide;
+        //slide.position.set(c.x, c.y, c.z);
       }
-
-      var exit = new TWEEN.Tween(oldSlide.position)
-        .to(this.OFFSET, transIn)
-        .easing(TWEEN.Easing.Back.Out)
-        .start();
-
-      var enter = new TWEEN.Tween(newSlide.position)
-        .to(this.CENTER, transOut)
-        .easing(TWEEN.Easing.Quadratic.Out);
-
-      exit.onComplete(function () {
-        enter.start();
-      });
-
-      enter.onComplete(function () {
-        self.SWITCHING = false;
-      });
-
-      window.currentSlide = idx
-      window.slide = newSlide;
-      //slide.position.set(c.x, c.y, c.z);
     }
   }
 };
