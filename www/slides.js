@@ -88,7 +88,7 @@ Slides.prototype.setCurrent = function (idx, opts) {
     var oldSlide = this.slides[this.current];
 
     if (oldSlide) {
-      this.SWITCHING = true;
+      //this.SWITCHING = true;
       this.current = idx;
 
       var newSlide = this.slides[idx];
