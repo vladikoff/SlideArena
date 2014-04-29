@@ -1,4 +1,5 @@
-var server = require('./slideserver')()
-var port = 8095
-server.listen(port)
-console.log('Listening on ', port, ' open http://localhost:', port)
+var express = require('express');
+var app = express();
+
+app.use(express.static(__dirname + '/www'));
+app.listen(3000);

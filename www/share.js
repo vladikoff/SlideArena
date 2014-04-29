@@ -1,1 +1,0 @@
-require('./share-game.js')({server: "ws://localhost:8080/"})
